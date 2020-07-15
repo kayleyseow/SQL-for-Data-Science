@@ -1,0 +1,499 @@
+Data Scientist Role Play: Profiling and Analyzing the Yelp Dataset Coursera Worksheet
+
+This is a 2-part assignment. In the first part, you are asked a series of questions that will help you profile and understand the data just like a data scientist would. For this first part of the assignment, you will be assessed both on the correctness of your findings, as well as the code you used to arrive at your answer. You will be graded on how easy your code is to read, so remember to use proper formatting and comments where necessary.
+
+In the second part of the assignment, you are asked to come up with your own inferences and analysis of the data for a particular research question you want to answer. You will be required to prepare the dataset for the analysis you choose to do. As with the first part, you will be graded, in part, on how easy your code is to read, so use proper formatting and comments to illustrate and communicate your intent as required.
+
+For both parts of this assignment, use this "worksheet." It provides all the questions you are being asked, and your job will be to transfer your answers and SQL coding where indicated into this worksheet so that your peers can review your work. You should be able to use any Text Editor (Windows Notepad, Apple TextEdit, Notepad ++, Sublime Text, etc.) to copy and paste your answers. If you are going to use Word or some other page layout application, just be careful to make sure your answers and code are lined appropriately.
+In this case, you may want to save as a PDF to ensure your formatting remains intact for you reviewer.
+
+
+
+Part 1: Yelp Dataset Profiling and Understanding
+
+1. Profile the data by finding the total number of records for each of the tables below:
+
+SELECT COUNT(*)
+FROM Table
+	
+i. Attribute table = 10000
+ii. Business table = 10000
+iii. Category table = 10000
+iv. Checkin table = 10000
+v. elite_years table = 10000
+vi. friend table = 10000
+vii. hours table = 10000
+viii. photo table = 10000
+ix. review table = 10000
+x. tip table = 10000
+xi. user table = 10000
+	
+
+
+2. Find the total distinct records by either the foreign key or primary key for each table. If two foreign keys are listed in the table, please specify which foreign key.
+
+SELECT COUNT(DISTINCT(key))
+FROM Table
+
+i. Business = id: 10000
+ii. Hours = business_id: 1562
+iii. Category = business_id: 2643
+iv. Attribute = business_id: 1115
+v. Review = id: 10000; user_id: 9581; business_id: 8090
+vi. Checkin = business_id: 493
+vii. Photo = id: 10000; business_id: 6493
+viii. Tip = user_id: 537; business_id: 3979
+ix. User = id: 10000
+x. Friend = user_id: 11
+xi. Elite_years = user_id: 2780
+
+Note: Primary Keys are denoted in the ER-Diagram with a yellow key icon.	
+
+
+
+3. Are there any columns with null values in the Users table? Indicate "yes," or "no."
+
+	Answer: no
+	
+	
+	SQL code used to arrive at answer:
+	
+	SELECT COUNT(*)
+	FROM user
+	WHERE id = NULL OR
+      		name = NULL OR
+      		review_count = NULL OR
+      		yelping_since = NULL OR
+      		useful = NULL OR
+      		funny = NULL OR
+      		cool = NULL OR
+      		fans = NULL OR
+      		average_stars = NULL OR
+      		compliment_hot = NULL OR
+      		compliment_more = NULL OR
+      		compliment_profile = NULL OR
+      		compliment_cute = NULL OR
+      		compliment_list = NULL OR
+      		compliment_note = NULL OR
+      		compliment_plain = NULL OR
+      		compliment_cool = NULL OR
+      		compliment_funny = NULL OR
+      		compliment_writer = NULL OR
+      		compliment_photos = NULL
+	
+
+4. For each table and column listed below, display the smallest (minimum), largest (maximum), and average (mean) value for the following fields:
+
+	i. Table: Review, Column: Stars
+	
+		min:	1	max:	5	avg:	3.7082
+		
+	
+	ii. Table: Business, Column: Stars
+	
+		min:	1.0	max:	5.0	avg:	3.6549
+		
+	
+	iii. Table: Tip, Column: Likes
+	
+		min:	0	max:	2	avg:	0.0144
+		
+	
+	iv. Table: Checkin, Column: Count
+	
+		min:	1	max:	53	avg:	1.9414
+		
+	
+	v. Table: User, Column: Review_count
+	
+		min:	0	max:	2000	avg:	24.2995
+		
+
+
+5. List the cities with the most reviews in descending order:
+
+	SQL code used to arrive at answer:
+	
+	SELECT city,
+        	SUM(review_count) as reviews
+	FROM business
+	GROUP BY city
+	ORDER BY reviews
+	DESC
+	
+
+	Copy and Paste the Result Below:
+
+	+-----------------+---------+
+	| city            | reviews |
+	+-----------------+---------+
+	| Las Vegas       |   82854 |
+	| Phoenix         |   34503 |
+	| Toronto         |   24113 |
+	| Scottsdale      |   20614 |
+	| Charlotte       |   12523 |
+	| Henderson       |   10871 |
+	| Tempe           |   10504 |
+	| Pittsburgh      |    9798 |
+	| MontrÃ©al        |    9448 |
+	| Chandler        |    8112 |
+	| Mesa            |    6875 |
+	| Gilbert         |    6380 |
+	| Cleveland       |    5593 |
+	| Madison         |    5265 |
+	| Glendale        |    4406 |
+	| Mississauga     |    3814 |
+	| Edinburgh       |    2792 |
+	| Peoria          |    2624 |
+	| North Las Vegas |    2438 |
+	| Markham         |    2352 |
+	| Champaign       |    2029 |
+	| Stuttgart       |    1849 |
+	| Surprise        |    1520 |
+	| Lakewood        |    1465 |
+	| Goodyear        |    1155 |
+	+-----------------+---------+
+	
+
+	
+6. Find the distribution of star ratings to the business in the following cities:
+
+i. Avon
+
+SQL code used to arrive at answer:
+
+SELECT stars,
+        COUNT(stars) as count
+FROM business
+WHERE city == 'Avon'
+GROUP BY stars
+
+
+Copy and Paste the Resulting Table Below (2 columns - star rating and count):
+
+	+-------+-------+
+	| stars | count |
+	+-------+-------+
+	|   1.5 |     1 |
+	|   2.5 |     2 |
+	|   3.5 |     3 |
+	|   4.0 |     2 |
+	|   4.5 |     1 |
+	|   5.0 |     1 |
+	+-------+-------+
+
+
+ii. Beachwood
+
+SQL code used to arrive at answer:
+
+SELECT stars,
+        COUNT(stars) as count
+FROM business
+WHERE city == 'Beachwood'
+GROUP BY stars
+
+
+Copy and Paste the Resulting Table Below (2 columns - star rating and count):
+
+	+-------+-------+
+	| stars | count |
+	+-------+-------+
+	|   2.0 |     1 |
+	|   2.5 |     1 |
+	|   3.0 |     2 |
+	|   3.5 |     2 |
+	|   4.0 |     1 |
+	|   4.5 |     2 |
+	|   5.0 |     5 |
+	+-------+-------+	
+
+
+7. Find the top 3 users based on their total number of reviews:
+		
+	SQL code used to arrive at answer:
+	
+	SELECT name,
+       	 	id,
+        	review_count
+	FROM user 
+	ORDER BY review_count
+	DESC
+	LIMIT 3
+	
+	
+	Copy and Paste the Result Below:
+
+	+--------+------------------------+--------------+
+	| name   | id                     | review_count |
+	+--------+------------------------+--------------+
+	| Gerald | -G7Zkl1wIWBBmD0KRy_sCw |         2000 |
+	| Sara   | -3s52C4zL_DHRK0ULG6qtg |         1629 |
+	| Yuri   | -8lbUNlXVSoXqaRRiHiSNg |         1339 |
+	+--------+------------------------+--------------+
+		
+
+
+8. Does posing more reviews correlate with more fans?
+
+	Please explain your findings and interpretation of the results:
+	
+	Posing more reviews is not neccesarily correlated with more fans. 
+	Looking at the table below, we can see that the number of fans varies quite a bit for the top 8 users that posed the most reviews.
+
+	SQL code used:
+
+	SELECT name,
+        	id,
+        	fans,
+        	review_count
+	FROM user
+	WHERE review_count > 1000
+	ORDER BY fans
+	DESC
+
+	+---------+------------------------+------+--------------+
+	| name    | id                     | fans | review_count |
+	+---------+------------------------+------+--------------+
+	| Harald  | --2vR0DIsmQ6WfcSzKWigw |  311 |         1153 |
+	| Gerald  | -G7Zkl1wIWBBmD0KRy_sCw |  253 |         2000 |
+	| William | -FZBTkAZEXoP7CYvRV2ZwQ |  126 |         1215 |
+	| Roanna  | -DFCC64NXgqrxlO8aLU5rg |  104 |         1039 |
+	| .Hon    | -K2Tcgh2EKX6e6HqqIrBIQ |  101 |         1246 |
+	| Yuri    | -8lbUNlXVSoXqaRRiHiSNg |   76 |         1339 |
+	| Sara    | -3s52C4zL_DHRK0ULG6qtg |   50 |         1629 |
+	| eric    | -gokwePdbXjfS0iF7NsUGA |   16 |         1116 |
+	+---------+------------------------+------+--------------+
+
+	
+9. Are there more reviews with the word "love" or with the word "hate" in them?
+
+	Answer: There are more reviews with the word "love" (1780 reviews) than with the word "hate" (232 reviews).
+
+	
+	SQL code used to arrive at answer:
+
+	SELECT COUNT(text)
+	FROM review
+	WHERE text LIKE '%love%'
+
+	SELECT COUNT(text)
+	FROM review
+	WHERE text LIKE '%hate%'
+
+	
+	
+10. Find the top 10 users with the most fans:
+
+	SQL code used to arrive at answer:
+	
+	SELECT name,
+        	id,
+        	fans
+	FROM user
+	ORDER BY fans
+	DESC
+	LIMIT 10
+	
+
+	Copy and Paste the Result Below:
+
+	+-----------+------------------------+------+
+	| name      | id                     | fans |
+	+-----------+------------------------+------+
+	| Amy       | -9I98YbNQnLdAmcYfb324Q |  503 |
+	| Mimi      | -8EnCioUmDygAbsYZmTeRQ |  497 |
+	| Harald    | --2vR0DIsmQ6WfcSzKWigw |  311 |
+	| Gerald    | -G7Zkl1wIWBBmD0KRy_sCw |  253 |
+	| Christine | -0IiMAZI2SsQ7VmyzJjokQ |  173 |
+	| Lisa      | -g3XIcCb2b-BD0QBCcq2Sw |  159 |
+	| Cat       | -9bbDysuiWeo2VShFJJtcw |  133 |
+	| William   | -FZBTkAZEXoP7CYvRV2ZwQ |  126 |
+	| Fran      | -9da1xk7zgnnfO1uTVYGkA |  124 |
+	| Lissa     | -lh59ko3dxChBSZ9U7LfUw |  120 |
+	+-----------+------------------------+------+
+
+		
+
+Part 2: Inferences and Analysis
+
+1. Pick one city and category of your choice and group the businesses in that city or category by their overall star rating. Compare the businesses with 2-3 stars to the businesses with 4-5 stars and answer the following questions. Include your code.
+	
+i. Do the two groups you chose to analyze have a different distribution of hours?
+
+	Yes, in Las Vegas, for the Food category, the 4-5 stars business has shorter hours than the 2-3 stars business. However, the query only returned 2 businesses,
+	so it may not be a great sample size for the whole food category businesses.
+
+
+	+-----------------------+-------+
+	| hours                 | stars |
+	+-----------------------+-------+
+	| Monday|10:00-19:00    |   4.0 |
+	| Tuesday|10:00-19:00   |   4.0 |
+	| Friday|10:00-19:00    |   4.0 |
+	| Wednesday|10:00-19:00 |   4.0 |
+	| Thursday|10:00-19:00  |   4.0 |
+	| Saturday|10:00-19:00  |   4.0 |
+	| Monday|8:00-22:00     |   2.5 |
+	| Tuesday|8:00-22:00    |   2.5 |
+	| Friday|8:00-22:00     |   2.5 |
+	| Wednesday|8:00-22:00  |   2.5 |
+	| Thursday|8:00-22:00   |   2.5 |
+	| Sunday|8:00-22:00     |   2.5 |
+	| Saturday|8:00-22:00   |   2.5 |
+	+-----------------------+-------+
+
+
+ii. Do the two groups you chose to analyze have a different number of reviews?
+
+	Yes, the 4-5 stars business has 30 reviews, whereas, the 2-3 stars business only has 6.
+         
+         
+iii. Are you able to infer anything from the location data provided between these two groups? Explain.
+
+	The 4-5 stars business is located in the Southeast neighborhood, and the 2-3 stars business is located in the Eastside neighborhood. Since the one in the
+	Southeast neighborhood has more reviews and higher rating of stars, it could be possible that the Southeast neighborhood cares more about food, which causes
+	better restaurants to want to be located there and have more customers writing reviews about the businesses.
+	However, the sample size is too small to confirm that whether or not the inference is true.
+
+SQL code used for analysis:
+
+SELECT b.name,
+        b.id,
+        h.hours,
+        b.review_count,
+        b.stars,
+        b.address,
+        b.postal_code,
+        b.neighborhood
+FROM business as b
+INNER JOIN hours as h
+ON b.id == h.business_id
+INNER JOIN category as c
+ON b.id == c.business_id
+WHERE b.city == 'Las Vegas'
+AND c.category == 'Food'
+AND (b.stars BETWEEN 2.0 AND 3.0
+OR b.stars BETWEEN 4.0 AND 5.0)
+		
+		
+2. Group business based on the ones that are open and the ones that are closed. What differences can you find between the ones that are still open and the ones that are closed? List at least two differences and the SQL code you used to arrive at your answer.
+		
+i. Difference 1:
+   The ones that are open have a higher average star rating (3.67900943396 stars) than the ones that are closed (3.52039473684 stars).      
+         
+ii. Difference 2:
+    The ones that are open have a higher average number of reviews (31 reviews/business) than the ones that are closed (23 reviews/business).
+         
+
+SQL code used for analysis:
+
+SELECT is_open,
+        COUNT(DISTINCT(id)),
+        AVG(stars),
+        SUM(review_count)/COUNT(DISTINCT(id))
+FROM business
+GROUP BY is_open
+
++---------+---------------------+---------------+---------------------------------------+
+| is_open | COUNT(DISTINCT(id)) |    AVG(stars) | SUM(review_count)/COUNT(DISTINCT(id)) | 
++---------+---------------------+---------------+---------------------------------------+
+|       0 |                1520 | 3.52039473684 |                                    23 |
+|       1 |                8480 | 3.67900943396 |                                    31 |
++---------+---------------------+---------------+---------------------------------------+
+	
+	
+3. For this last part of your analysis, you are going to choose the type of analysis you want to conduct on the Yelp dataset and are going to prepare the data for analysis.
+
+Ideas for analysis include: Parsing out keywords and business attributes for sentiment analysis, clustering businesses to find commonalities or anomalies between them, predicting the overall star rating for a business, predicting the number of fans a user will have, and so on. These are just a few examples to get you started, so feel free to be creative and come up with your own problem you want to solve. Provide answers, in-line, to all of the following:
+	
+i. Indicate the type of analysis you chose to do:
+
+   Predicting how to open and run a specific type of business in a specific location assuming you are an entrepreneur.
+         
+         
+ii. Write 1-2 brief paragraphs on the type of data you will need for your analysis and why you chose that data:
+     
+    If you want to open a new business, it is important to predict how to run the business in that specific location would be the most sucessful.
+    Some of the important data that could help you analyze this information are: the location of the business, the stars of businesses, the business hours, the 
+    business attributes, the number of reviews. The number of reviews could indicate how popular the business is/if it is located 
+    where customers would notice. Even if the reviews may be bad, you could get a sense of whether or not that location is a good location to open up a business. 
+    The business hours and business attributes correlate heavily with the stars of the businesses. They show the needs of people in that neighborhood. The list of 
+    businesses will be ordered by the star rating of descending order. As the entrepreneur, you can look at the high star rating ones and see what they are doing to 
+    do the same things, and look at the low star rating ones to know what to avoid doing.                 
+                  
+iii. Output of your finished dataset:
+     
+     +--------------------------------------+------------------------+-------------+---------------------------------+-----------------------------+--------------+---------------+-------+-------------------+----------------------------+--------------+---------------+-----------------+----------------+--------------+---------------+--------------+
+     | Business                             | Business_ID            | Star_Rating | Category                        | Address                     | Neighborhood | City          | State | Number_of_Reviews | Attributes                 | Monday_Hours | Tuesday_Hours | Wednesday_Hours | Thursday_Hours | Friday_Hours | Monday_Hours  | Sunday_Hours |
+     +--------------------------------------+------------------------+-------------+---------------------------------+-----------------------------+--------------+---------------+-------+-------------------+----------------------------+--------------+---------------+-----------------+----------------+--------------+---------------+--------------+
+     | Motors & More                        | -CdstAUdEvci8GeJG8owpQ |         5.0 | Heating & Air Conditioning/HVAC | 2315 Highland Dr            |              | Las Vegas     | NV    |                 7 | ByAppointmentOnly          | 7:00-17:00   | 7:00-17:00    | 7:00-17:00      | 7:00-17:00     | 7:00-17:00   | 8:00-12:00    |         None |
+     | Buddy's Muffler & Exhaust            | 0-aPEeNc2zVb5Gp-i7Ckqg |         5.0 | Auto Repair                     | 1509 Hickory Grove Rd       |              | Gastonia      | NC    |                 4 | BusinessAcceptsCreditCards | 8:30-17:00   | 8:30-17:00    | 8:30-17:00      | 8:30-17:00     | 8:30-17:00   | 9:00-15:00    |         None |
+     | PC Savants                           | 0Y3lHyqRHfWOBuQlS1bM0g |         5.0 | IT Services & Computer Repair   | 11966 W Candelaria Ct       |              | Sun City      | AZ    |                11 | BusinessAcceptsCreditCards | 10:00-19:00  | 10:00-19:00   | 10:00-19:00     | 10:00-19:00    | 10:00-19:00  | 11:00-18:00   |  11:00-18:00 |
+     | Dollar Mania                         | 0oDfGJPbqdSigRwIFM-RoQ |         5.0 | Party Supplies                  | 963 W Elliot Rd, Ste 1      |              | Chandler      | AZ    |                 4 | BusinessAcceptsCreditCards | 9:00-20:00   | 9:00-20:00    | 9:00-20:00      | 9:00-20:00     | 9:00-20:00   | 9:00-20:00    |  10:00-17:00 |
+     | PRO BIKE+RUN                         | 0t2yPpsbObqxB8PRyLRUhg |         5.0 | Bike Repair/Maintenance         | 3100 Robinson Ln            |              | Pittsburgh    | PA    |                 8 | DogsAllowed                | 10:00-20:00  | 10:00-20:00   | 10:00-20:00     | 10:00-20:00    | 10:00-20:00  | 10:00-18:00   |  12:00-17:00 |
+     | Clean Colonic                        | 1VGt2OyKgbnwQiFVlg8p_Q |         5.0 | Colonics                        | 7560 S Willow Dr            |              | Tempe         | AZ    |                 5 | AcceptsInsurance           | 9:00-17:00   | 9:00-20:00    | 8:00-20:00      | 8:00-20:00     | 8:00-20:00   | 10:00-16:00   |  12:00-16:00 |
+     | Camden Fairview                      | 1_N57pQ4w4f0BIuMI_09xg |         5.0 | Apartments                      | 8738 Fairview Road          | South Park   | Charlotte     | NC    |                 6 | BusinessAcceptsCreditCards | 9:00-18:00   | 9:00-18:00    | 9:00-18:00      | 9:00-18:00     | 9:00-18:00   | 10:00-17:00   |  10:00-17:00 |
+     | Lifestyles Fitness Personal Training | 1es8u2NyeuXpDqWaUXMbnw |         5.0 | Active Life                     | 4685 S Ash Ave, Ste H-1     |              | Tempe         | AZ    |                17 | ByAppointmentOnly          | 5:00-21:00   | 5:00-21:00    | 5:00-21:00      | 5:00-21:00     | 5:00-21:00   | 5:00-21:00    |         None |
+     | Springmaster Garage Door Service     | 1hlwL5E035WQfB7Zb2mLUw |         5.0 | Home Services                   | 1909 E Ray Rd, Ste 9-170    |              | Chandler      | AZ    |                 7 | BusinessAcceptsCreditCards | 5:00-0:00    | 5:00-0:00     | 5:00-0:00       | 5:00-0:00      | 5:00-0:00    | 5:00-0:00     |    5:00-0:00 |
+     | Back-Health Chiropractic             | 2eJEUJIP54tex7T9YOcLSw |         5.0 | Health & Medical                | 4425 N 24th St, Ste 125     |              | Phoenix       | AZ    |                19 | BusinessAcceptsCreditCards | 14:30-17:00  | 14:00-19:00   | 14:30-17:00     | 14:00-19:00    | 9:00-12:00   | None          |         None |
+     | Gussied Up                           | -uiBBVWI6tMDm2JFbZFrOw |         4.5 | Women's Clothing                | 1090 Bathurst St            | The Annex    | Toronto       | ON    |                 6 | BusinessAcceptsCreditCards | None         | 11:00-19:00   | 11:00-19:00     | 11:00-19:00    | 11:00-19:00  | 11:00-17:00   |  12:00-16:00 |
+     | Red Rock Canyon Visitor Center       | 0K2rKvqdBmiOAUTebcUohQ |         4.5 | Education                       | 1000 Scenic Loop Dr         |              | Las Vegas     | NV    |                32 | BusinessAcceptsCreditCards | 8:00-16:30   | 8:00-16:30    | 8:00-16:30      | 8:00-16:30     | 8:00-16:30   | 8:00-16:30    |   8:00-16:30 |
+     | Scent From Above Company             | 0Ni7Stqt4RFWDGjOYRi2Bw |         4.5 | Window Washing                  | 2501 W Behrend Dr, Ste 67   |              | Scottsdale    | AZ    |                14 | ByAppointmentOnly          | 6:00-16:00   | 6:00-16:00    | 6:00-16:00      | 6:00-16:00     | 6:00-16:00   | None          |         None |
+     | Sushi Osaka                          | 0e-j5VcEn54EZT-FKCUZdw |         4.5 | Sushi Bars                      | 5084 Dundas Street W        | Etobicoke    | Toronto       | ON    |                 8 | RestaurantsTakeOut         | 11:00-23:00  | 11:00-23:00   | 11:00-23:00     | 11:00-23:00    | 11:00-23:00  | 11:00-23:00   |  14:00-23:00 |
+     | Charlie D's Catfish & Chicken        | 1mkDrJRu3VABKy95gxD-Hg |         4.5 | American (Traditional)          | 1153 E Jefferson St         |              | Phoenix       | AZ    |                 7 | GoodForMeal                | 11:00-18:00  | 11:00-18:00   | 11:00-18:00     | 11:00-18:00    | 11:00-18:00  | 11:00-18:00   |  13:00-16:00 |
+     | Ahn & Perez, DDS                     | 29fQtyR9EtAlA75e4jGzRw |         4.5 | Dentists                        | 2039 S Mill Ave, Ste F      |              | Tempe         | AZ    |                13 | BusinessAcceptsCreditCards | 8:00-17:00   | 8:00-17:00    | 8:00-17:00      | 7:00-17:00     | None         | None          |         None |
+     | Good Gosh Beauty                     | 2cis-XlGhlG0Vzlx5je-4A |         4.5 | Beauty & Spas                   | 325 Glebemount Avenue       | East York    | Toronto       | ON    |                 6 | WheelchairAccessible       | 11:30-18:00  | 11:30-18:00   | None            | None           | None         | 10:00-17:00   |         None |
+     | Health For Life: North Mesa          | 2jg7v96HM3mNSUrbk3sMxg |         4.5 | Health & Medical                | 3321 Reseda Cir, Ste 50     |              | Mesa          | AZ    |                16 | AcceptsInsurance           | 9:00-20:00   | 9:00-20:00    | 9:00-20:00      | 9:00-20:00     | 9:00-20:00   | 9:00-20:00    |   9:00-20:00 |
+     | Oaks Golf Course                     | 2vz3U82Sf8GgXppyjGSdbg |         4.5 | Golf                            | 4740 Pierceville Rd         |              | Cottage Grove | WI    |                 5 | GoodForKids                | 7:00-19:00   | 7:00-19:00    | 7:00-19:00      | 7:00-19:00     | 7:00-19:00   | 7:00-19:00    |   7:00-19:00 |
+     | Pinnacle Fencing Solutions           | -hjbcaxaU9yYXY2iI-49sw |         4.0 | Fences & Gates                  |                             |              | Phoenix       | AZ    |                13 | ByAppointmentOnly          | 8:00-16:00   | 8:00-16:00    | 8:00-16:00      | 8:00-16:00     | 8:00-16:00   | None          |         None |
+     | Alterations Express                  | -iu4FxdfxN4rU4Fu9BjiFw |         4.0 | Sewing & Alterations            | 17240 Royalton Rd           |              | Strongsville  | OH    |                 3 | WheelchairAccessible       | 8:00-19:00   | 8:00-19:00    | 8:00-19:00      | 8:00-19:00     | 8:00-19:00   | 8:00-18:00    |         None |
+     | Extra Space Storage                  | -j4NsiRzSMrMk2N_bGH_SA |         4.0 | Home Services                   | 2880 W Elliot Rd            |              | Chandler      | AZ    |                 5 | BusinessAcceptsCreditCards | 8:00-17:30   | 8:00-17:30    | 8:00-17:30      | 8:00-17:30     | 8:00-17:30   | 8:00-17:30    |  10:00-14:00 |
+     | Sweet Ruby Jane Confections          | 0aKsGxx7XP2TMs_fn_9xVw |         4.0 | Desserts                        | 8975 S Eastern Ave, Ste 3-B | Southeast    | Las Vegas     | NV    |                30 | WheelchairAccessible       | 10:00-19:00  | 10:00-19:00   | 10:00-19:00     | 10:00-19:00    | 10:00-19:00  | 10:00-19:00   |         None |
+     | The Cider Mill                       | 0kyhbUW6NkpYjJzFBZ64vQ |         4.0 | Beer                            | 7240 E Main St, Ste C       |              | Scottsdale    | AZ    |                91 | RestaurantsTableService    | 10:00-18:00  | 10:00-18:00   | 10:00-18:00     | 10:00-20:00    | 10:00-20:00  | 10:00-20:00   |  11:00-16:00 |
+     | Vue at Centennial                    | 0sOwP5b_178FkbT_fat8lQ |         4.0 | Real Estate                     | 7350 W Centennial Pkwy      | Centennial   | Las Vegas     | NV    |                 6 | BusinessAcceptsCreditCards | 9:00-17:00   | 9:00-17:00    | 9:00-17:00      | 9:00-17:00     | 9:00-17:00   | 9:00-17:00    |  10:00-16:00 |
+     +--------------------------------------+------------------------+-------------+---------------------------------+-----------------------------+--------------+---------------+-------+-------------------+----------------------------+--------------+---------------+-----------------+----------------+--------------+---------------+--------------+
+
+         
+iv. Provide the SQL code you used to create your final dataset:
+
+    SELECT b.name as Business,
+        b.id as Business_ID,
+        b.stars as Star_Rating,
+        b.address as Address,
+        b.neighborhood as Neighborhood,
+        b.city as City,
+        b.state as State,
+        b.review_count as Number_of_Reviews,
+        a.name as Attributes,
+        MAX(CASE
+        WHEN h.hours LIKE '%Monday%' THEN TRIM(h.hours, '%MondayTuesWednesThursFriSaturSun|%')
+        END) as Monday_Hours,
+        MAX(CASE
+        WHEN h.hours LIKE '%Tuesday%' THEN TRIM(h.hours, '%MondayTuesWednesThursFriSaturSun|%')
+        END) as Tuesday_Hours,
+        MAX(CASE
+        WHEN h.hours LIKE '%Wednesday%' THEN TRIM(h.hours, '%MondayTuesWednesThursFriSaturSun|%')
+        END) as Wednesday_Hours,
+        MAX(CASE
+        WHEN h.hours LIKE '%Thursday%' THEN TRIM(h.hours, '%MondayTuesWednesThursFriSaturSun|%')
+        END) as Thursday_Hours,
+        MAX(CASE
+        WHEN h.hours LIKE '%Friday%' THEN TRIM(h.hours, '%MondayTuesWednesThursFriSaturSun|%')
+        END) as Friday_Hours,
+        MAX(CASE
+        WHEN h.hours LIKE '%Saturday%' THEN TRIM(h.hours, '%MondayTuesWednesThursFriSaturSun|%')
+        END) as Monday_Hours,
+        MAX(CASE
+        WHEN h.hours LIKE '%Sunday%' THEN TRIM(h.hours, '%MondayTuesWednesThursFriSaturSun|%')
+        END) as Sunday_Hours
+    FROM business as b
+    INNER JOIN category as c
+    ON b.id == c.business_id
+    INNER JOIN attribute as a
+    ON b.id == a.business_id
+    INNER JOIN hours as h
+    ON b.id == h.business_id
+    GROUP BY b.id
+    ORDER BY b.stars
+    DESC
